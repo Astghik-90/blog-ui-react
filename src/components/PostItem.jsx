@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import updatePost from "../services/postsApi";
+
 export default function PostItem({ post }) {
     return (
         <article className="rounded border border-gray-200 bg-white p-5 shadow-sm">
@@ -7,7 +9,7 @@ export default function PostItem({ post }) {
                 <h3 className="text-xl font-semibold text-gray-900">{post.title}</h3>
             </div>
             <p className="text-gray-700 whitespace-pre-line">{post.content}</p>
-            {post.category_names.length > 0 && (
+            {Array.isArray(post.category_names) && post.category_names.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                     {post.category_names.map((category) => (
                         <span key={category} className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
