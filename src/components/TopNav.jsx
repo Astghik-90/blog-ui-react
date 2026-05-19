@@ -1,7 +1,9 @@
-import { Form, NavLink } from 'react-router-dom';
+import { Form, NavLink, useRouteLoaderData } from 'react-router-dom';
 import logoImg from '../assets/logo192.png';
 
 function TopNav() {
+  const token = useRouteLoaderData('root');
+
   return (
     <header className='flex items-center px-6 h-14 border-b'>
       <nav>
@@ -18,23 +20,28 @@ function TopNav() {
               Profile
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/login" className={({ isActive }) => isActive ? 'text-blue-600' : 'text-gray-600'}>
-              Login
-            </NavLink>
-          </li>
+          {!token && (
+            <>
+              <li>
+                <NavLink to="/login" className={({ isActive }) => isActive ? 'text-blue-600' : 'text-gray-600'}>
+                  Login
+                </NavLink>
+              </li>
           <li>
             <NavLink to="/register" className={({ isActive }) => isActive ? 'text-blue-600' : 'text-gray-600'}>
               Register
             </NavLink>
           </li>
+            </>
+          )}
+          {token && ( 
           <li>
-            <Form action='/logout' method='post'>
+            <Form action='/logout' method='POST'>
               <button className='bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'>
                 Logout
               </button>
             </Form>
-          </li>
+          </li>)}
         </ul>
       </nav>
     </header>

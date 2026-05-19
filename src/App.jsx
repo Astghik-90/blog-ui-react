@@ -5,6 +5,7 @@ import { action as logoutAction } from './pages/LogoutPage';
 import HomePage from './pages/HomePage';
 import ErrorPage from './pages/ErrorPage';
 import RootLayout from './pages/RootLayout';
+import { tokenLoader } from './utils/auth';
 
 
 const router = createBrowserRouter([
@@ -12,6 +13,8 @@ const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     errorElement: <ErrorPage />,
+    loader: tokenLoader,
+    id: 'root',
     children: [
       {index: true, element: <HomePage />},
       {
