@@ -1,4 +1,4 @@
-import {redirect} from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 import SignupForm from '../components/SignupForm';
 
 export default function SignupPage() {
@@ -28,14 +28,14 @@ export async function action({ request }) {
 
     const data = await response.json();
 
-    if(response.status === 422) {
+    if (response.status === 422) {
         return {
-            status: 422,    
+            status: 422,
             errors: data.errors.json,
         };
     }
 
-    if(response.status === 409) {
+    if (response.status === 409) {
         return {
             status: 409,
             errors: { email: ['Email or username already exists'] }
@@ -44,6 +44,8 @@ export async function action({ request }) {
 
     if (!response.ok) {
         throw new Error('An Error occurred while trying to register.', { status: 500 });
-    }  
-    return redirect('/');     
+    }
+
+
+    return redirect('/login?message=Account created successfully.');
 }
