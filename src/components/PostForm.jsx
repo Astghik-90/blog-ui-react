@@ -1,7 +1,7 @@
 
 import { useRouteLoaderData } from "react-router-dom";
 
-export default function PostForm({ post, onSubmit }) {
+export default function PostForm({ post, onSubmit, isPending, isError, error }) {
 
     const token = useRouteLoaderData('root');
 
@@ -18,6 +18,11 @@ export default function PostForm({ post, onSubmit }) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
+            {isError && error?.message && (
+                <div className="p-4 bg-red-100 text-red-700 rounded">
+                    {error.message}
+                </div>
+            )}
             <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
                 <input
@@ -27,6 +32,9 @@ export default function PostForm({ post, onSubmit }) {
                     defaultValue={post?.title || ''}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
+                {error?.errors?.title && (
+                    <p className="text-red-600 text-sm mt-1">{error.errors.title}</p>
+                )}
             </div>
             <div>
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>
@@ -37,13 +45,18 @@ export default function PostForm({ post, onSubmit }) {
                     rows={4}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
+                {error?.errors?.content && (
+                    <p className="text-red-600 text-sm mt-1">{error.errors.content}</p>
+                )}
             </div>
-            
             <button
                 type="submit"
+                disabled={isPending}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-                {post?.id ? 'Update Post' : 'Create Post'}
+                {isPending
+                    ? (post?.id ? 'Updating...' : 'Creating...')
+                    : (post?.id ? 'Update Post' : 'Create Post')}
             </button>
         </form>
     )

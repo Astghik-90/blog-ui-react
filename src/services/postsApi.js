@@ -21,6 +21,8 @@ export async function fetchPosts(filters = {}) {
 
 export async function fetchPost(postId) {
     const token = getToken();
+    // console.log("fetchPost called with id:", postId);
+
     const response = await fetch(`/posts/${postId}`, {
         headers: {
             'Content-Type': 'application/json',
@@ -32,6 +34,8 @@ export async function fetchPost(postId) {
         const errorPayload = await response.json().catch(() => null);
         throw new Error(errorPayload?.message || 'Failed to fetch post');
     }
+
+    // console.log("fetchPost response:", response);
 
     return response.json();
 }
@@ -49,6 +53,24 @@ export async function createPost(payload) {
 
     if (!response.ok) {
         const errorPayload = await response.json().catch(() => null);
+
+        const validationErrors = errorPayload?.errors?.json;
+
+        let formattedErrors = {};
+
+        if (validationErrors) {
+            for (const [field, messages] of Object.entries(validationErrors)) {
+                formattedErrors[field] = messages.join(', ');
+            }
+        }
+
+        if (Object.keys(formattedErrors).length > 0) {
+            const error = new Error('Validation failed');
+            error.errors = formattedErrors;
+            error.type = 'validation';
+            throw error;
+        }
+
         throw new Error(errorPayload?.message || 'Failed to create post');
     }
 
@@ -68,6 +90,24 @@ export async function updatePost(postId, payload) {
 
     if (!response.ok) {
         const errorPayload = await response.json().catch(() => null);
+
+        const validationErrors = errorPayload?.errors?.json;
+
+        let formattedErrors = {};
+
+        if (validationErrors) {
+            for (const [field, messages] of Object.entries(validationErrors)) {
+                formattedErrors[field] = messages.join(', ');
+            }
+        }
+
+        if (Object.keys(formattedErrors).length > 0) {
+            const error = new Error('Validation failed');
+            error.errors = formattedErrors;
+            error.type = 'validation';
+            throw error;
+        }
+
         throw new Error(errorPayload?.message || 'Failed to update post');
     }
     return response.json();

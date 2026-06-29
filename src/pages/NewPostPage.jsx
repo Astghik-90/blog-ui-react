@@ -24,21 +24,14 @@ export default function NewPostPage() {
 
     return (
         <>
-            {isError && (
-                <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">
-                    {error.message}
-                </div>
-            )}
             <div className="max-w-md mx-auto p-6">
                 <h2 className="text-2xl font-bold mb-4">New Post</h2>
-                <PostForm onSubmit={handleSubmit} />
+                <PostForm
+                    onSubmit={handleSubmit} 
+                    isPending={isPending} 
+                    isError={isError} 
+                    error={error} />
             </div>
-
-            {isPending && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
-                    <p>Creating post...</p>
-                </div>
-            )}
         </>
     )
 }

@@ -6,14 +6,15 @@ import PostForm from "../components/PostForm";
 import { updatePost, fetchPost } from "../services/postsApi";
 
 
-export default function EditPostPage({ post }) {
+export default function EditPostPage() {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const { postId } = useParams();
+    // console.log("with id:", postId);
 
     const { data: postData, isLoading, isError: isFetchError, error: fetchError } = useQuery({
-        queryKey: ['post', id],
-        queryFn: () => fetchPost(id),
-        enabled: !!id,
+        queryKey: ['post', postId],
+        queryFn: () => fetchPost(postId),
+        enabled: !!postId,
     });
 
     const { mutate, isPending, isError, error } = useMutation({
@@ -27,7 +28,7 @@ export default function EditPostPage({ post }) {
     });
 
     function handleSubmit(formData) {
-        mutate({ id, formData });
+        mutate({ id: postId, postData: formData });
     }
 
     return (
@@ -37,12 +38,18 @@ export default function EditPostPage({ post }) {
                 <div>Loading post...</div>
             ) : isFetchError ? (
                 <div className="text-red-600">{fetchError?.message || 'Failed to load post'}</div>
-            ) : (
-                <PostForm
-                    key={postData?.id}
-                    post={postData}
-                    onSubmit={handleSubmit} />
-            )}
+            ) :
+                (
+                        <PostForm
+                            key={postData?.id}
+                            post={postData}
+                            onSubmit={handleSubmit}
+                            isPending={isPending}
+                            isError={isError}
+                            error={error}
+                        />
+                    
+                )}
         </div>
     )
 }
