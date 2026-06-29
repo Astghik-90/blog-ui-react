@@ -112,3 +112,25 @@ export async function updatePost(postId, payload) {
     }
     return response.json();
 }
+
+export async function deletePost(postId) {
+    const token = getToken();
+    const response = await fetch(`/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const errorPayload = await response.json().catch(() => null);
+        throw new Error(errorPayload?.message || 'Failed to delete post');
+    }
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    return response.json();
+}

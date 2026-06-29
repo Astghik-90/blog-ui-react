@@ -1,4 +1,5 @@
 import { redirect } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 
 export function getToken() {
     return localStorage.getItem('token');
@@ -44,4 +45,14 @@ export function checkAuthLoader() {
     if (!token) {
         return redirect('/');
     }
+}
+
+export function getCurrentUserId() {
+    const token = getToken();
+    if (!token) {
+        return null;
+    }
+
+    const decodedToken = jwtDecode(token);
+    return decodedToken.sub;
 }
