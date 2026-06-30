@@ -40,7 +40,7 @@ export default function CommentForm({ postId, comment }) {
                     type="submit"
                     className="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                 >
-                    {mutation.isPending ? 'Submitting...' : 'Submit Comment'}
+                    {mutation.isPending ? 'Adding...' : 'Add Comment'}
                 </button>
             </div>
         </form>

@@ -38,7 +38,7 @@ export function getTokenDuration() {
     const now = new Date();
     return expirationDate.getTime() - now.getTime();
 }
-   
+
 
 export function checkAuthLoader() {
     const token = getToken();
@@ -47,12 +47,22 @@ export function checkAuthLoader() {
     }
 }
 
-export function getCurrentUserId() {
-    const token = getToken();
-    if (!token) {
-        return null;
-    }
+// export function getCurrentUserId() {
+//     const token = getToken();
+//     if (!token) {
+//         return null;
+//     }
 
-    const decodedToken = jwtDecode(token);
-    return decodedToken.sub;
-}
+//     const decodedToken = jwtDecode(token);
+//     return decodedToken.sub;
+// }
+
+// export function isAdmin() {
+//     const token = getToken();
+//     if (!token) {
+//         return false;
+//     }
+
+//     const decodedToken = jwtDecode(token);
+//     return decodedToken.role === 1;
+// }

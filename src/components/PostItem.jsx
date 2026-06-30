@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
-import { getCurrentUserId } from "../utils/auth";
+// import { getCurrentUserId, isAdmin} from "../utils/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "../services/postsApi";
 import { useState } from "react";
 import CommentSection from "./comments/CommentSection";
+import { useAuth } from "../store/authContext";
 
 export default function PostItem({ post }) {
     const [showComments, setShowComments] = useState(false);
+
+    const auth = useAuth();
+    console.log(auth);
 
     function toggleComments() {
         setShowComments(prev => !prev);
@@ -30,6 +34,8 @@ export default function PostItem({ post }) {
             deleteMutation.mutate(post.id);
         }
     };
+
+    const canDelete = auth.userId === post.author_id || auth.isAdmin;
 
     return (
         <article className="rounded border border-gray-200 bg-white p-5 shadow-sm">
@@ -61,24 +67,24 @@ export default function PostItem({ post }) {
             >
                 Comments
             </button>
-                {getCurrentUserId() === post.author_id && (
-                    <>
-                        <Link
-                            to={`/posts/${post.id}/edit`}
-                            type="button"
-                            className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-                        >
-                            Edit Post
-                        </Link>
-                        <button
-                            type="button"
-                            disabled={deleteMutation.isPending}
-                            className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-                            onClick={handleDelete}
-                        >
-                            Delete
-                        </button>
-                    </>)}
+                {auth.userId === post.author_id && (
+                    <Link
+                        to={`/posts/${post.id}/edit`}
+                        type="button"
+                        className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                    >
+                        Edit Post
+                    </Link>)}
+                {canDelete && (
+                    <button
+                        type="button"
+                        disabled={deleteMutation.isPending}
+                        className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                        onClick={handleDelete}
+                    >
+                        Delete
+                    </button>
+                )}
             </div>
             {showComments && (
                 <div className="mt-4">
