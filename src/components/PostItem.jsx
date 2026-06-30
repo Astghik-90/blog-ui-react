@@ -38,8 +38,11 @@ export default function PostItem({ post }) {
                     {deleteMutation.error?.message || 'Failed to delete post'}
                 </div>
             )}
+            <div className="mb-3 flex items-center gap-3">
+                <h3 className="text-xl font-semibold text-gray-900">{post.author.username}</h3>
+            </div>
             <div className="mb-3 flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-gray-900">{post.title}</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
             </div>
             <p className="text-gray-700 whitespace-pre-line">{post.content}</p>
             {Array.isArray(post.category_names) && post.category_names.length > 0 && (

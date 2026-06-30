@@ -18,6 +18,8 @@ export default function CommentForm({ postId, comment }) {
         const content = formData.get('comment');
 
         mutation.mutate(content);
+
+        event.target.reset();
     }
 
     return (
