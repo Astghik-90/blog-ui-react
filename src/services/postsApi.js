@@ -134,3 +134,33 @@ export async function deletePost(postId) {
 
     return response.json();
 }
+
+export async function addComment(postId, content) {
+    const token = getToken();
+    const response = await fetch(`/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content }),
+    });
+
+    if (!response.ok) {
+        const errorPayload = await response.json().catch(() => null);
+        throw new Error(errorPayload?.message || 'Failed to add comment');
+    }
+
+    return response.json();
+}
+
+export async function fetchComments(postId) {
+    const token = getToken();
+    const response = await fetch(`/posts/${postId}/comments`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    return response.json();
+}

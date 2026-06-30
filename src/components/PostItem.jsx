@@ -2,8 +2,16 @@ import { Link } from "react-router-dom";
 import { getCurrentUserId } from "../utils/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "../services/postsApi";
+import { useState } from "react";
+import CommentSection from "./comments/CommentSection";
 
 export default function PostItem({ post }) {
+    const [showComments, setShowComments] = useState(false);
+
+    function toggleComments() {
+        setShowComments(prev => !prev);
+    }
+
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
         mutationFn: (postId) => deletePost(postId),
@@ -46,8 +54,9 @@ export default function PostItem({ post }) {
             <div className="flex gap-3">            <button
                 type="button"
                 className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                onClick={toggleComments}
             >
-                Add a comment
+                Comments
             </button>
                 {getCurrentUserId() === post.author_id && (
                     <>
@@ -68,6 +77,11 @@ export default function PostItem({ post }) {
                         </button>
                     </>)}
             </div>
+            {showComments && (
+                <div className="mt-4">
+                    <CommentSection postId={post.id} />
+                </div>
+            )}
         </article>
     );
 }
